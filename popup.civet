@@ -1,0 +1,50 @@
+formatter := new Intl.NumberFormat 'en', notation: 'compact'
+get_parameters :=
+  'www.youtube.com/watch': ['v']
+tab := (await chrome.tabs.query({ active: true, lastFocusedWindow: true }))[0]
+canonized_url := canonizeUrl tab.url
+
+function canonizeUrl(url_)
+  prefix := url_.split('?')[0]
+  params := new URLSearchParams()
+  u := new URL url_
+  for key of get_parameters[u.host + u.pathname] ?? []
+    p := u.searchParams.get(key)
+    if p === undefined
+      continue
+    params.append(key, p)
+  param_string := params.toString()
+  return if param_string.# then [prefix, param_string].join('?') else prefix
+
+reactions := Array(16).fill false
+
+/*
+emoji_names := ['true', 'false',
+                'fire', 'chill',
+                'happy', 'sad',
+                'quality', 'shit',
+                'informative', 'confusing',
+                'funny', 'boring',
+                'troll', 'shocked',
+                'wholesome', 'disgusting']
+*/
+
+
+function react(evt, index)
+  reactions[index] = !reactions[index]
+  element := evt.currentTarget
+  count := element.getElementsByClassName('reaction-count')[0]
+  element.className = if reactions[index] then 'reacted' else ''
+  element.getElementsByClassName('reaction-count')[0].innerText =
+    formatter.format count.value + (if reactions[index] then 1 else 0)
+
+console.log(tab.title)
+console.log(canonized_url)
+
+for element, index of document.getElementById('reactions').children
+  count := element.getElementsByClassName('reaction-count')[0]
+  count.value = 0  // TODO
+  element.className = 'reacted' if reactions[index]
+  element.addEventListener('click', (evt) => react(evt, index))
+  element.getElementsByClassName('reaction-count')[0].innerText =
+    formatter.format count.value + (if reactions[index] then 1 else 0)

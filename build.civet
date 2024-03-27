@@ -1,0 +1,12 @@
+#!/usr/bin/env civet
+
+fs := require 'fs'
+pug := require 'pug'
+stylus := require 'stylus'
+civet := require '@danielx/civet'
+
+fs.writeFileSync 'popup.html', pug.renderFile 'popup.pug', cache: true, pretty: true
+stylus.render fs.readFileSync('popup.styl', encoding: 'utf8', flag: 'r'), filename: 'popup.css', (err, css) =>
+  fs.writeFileSync('popup.css', css)
+  if (err) throw err
+fs.writeFileSync 'popup.js', civet.compile fs.readFileSync('popup.civet', encoding: 'utf8', flag: 'r'), js: true

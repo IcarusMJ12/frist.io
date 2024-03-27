@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "frist.io",
+  "description": "React to any page on the internet.",
+   "action": {
+      "default_popup": "popup.html"
+   },
+  "permissions": ["activeTab", "storage"],
+  "version": "0.1.0",
+  "icons": {
+    "16": "icons/forte-16.png",
+    "32": "icons/forte-32.png",
+    "48": "icons/forte-48.png",
+    "128": "icons/forte-128.png"
+  }
+}

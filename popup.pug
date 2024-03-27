@@ -1,0 +1,14 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet' href='./popup.css')
+  body
+    ul#reactions
+      each emoji in ['💯', '❌', '🔥', '❄️', '😊', '😢', '💎', '💩', '🤔', '🤨', '🤣', '🥱', '😏', '😲', '🤗', '🤮']
+        li
+          .reaction= emoji
+          .reaction-count(value=0) 0
+    
+    script(src='./popup.js' type='module')

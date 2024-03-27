@@ -1,0 +1,29 @@
+{
+  "name": "frist.io",
+  "version": "0.1.0",
+  "description": "React to any page on the internet.",
+  "main": "build.civet",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IcarusMJ12/frist.io.git"
+  },
+  "keywords": [
+    "reactions",
+    "emoji",
+    "social"
+  ],
+  "author": "Igor Kaplounenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IcarusMJ12/frist.io/issues"
+  },
+  "homepage": "https://github.com/IcarusMJ12/frist.io#readme",
+  "devDependencies": {
+    "@danielx/civet": "^0.6.86",
+    "pug": "^3.0.2",
+    "stylus": "^0.63.0"
+  }
+}
