@@ -21,7 +21,7 @@ function canonizeUrl(url_)
   return if param_string.# then [prefix, param_string].join('?') else prefix
 
 stored := await chrome.storage.local.get canonized_url
-let reactions = stored[canonized_url][REACTIONS] ?? 0
+let reactions = stored?[canonized_url]?[REACTIONS] ?? 0
 
 /*
 emoji_names := ['true', 'false',
