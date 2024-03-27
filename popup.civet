@@ -4,6 +4,10 @@ get_parameters :=
 tab := (await chrome.tabs.query({ active: true, lastFocusedWindow: true }))[0]
 canonized_url := canonizeUrl tab.url
 
+REACTIONS := 0
+TITLE := 1
+DATE := 2
+
 function canonizeUrl(url_)
   prefix := url_.split('?')[0]
   params := new URLSearchParams()
@@ -16,7 +20,8 @@ function canonizeUrl(url_)
   param_string := params.toString()
   return if param_string.# then [prefix, param_string].join('?') else prefix
 
-reactions := Array(16).fill false
+stored := await chrome.storage.local.get canonized_url
+let reactions = stored[canonized_url][REACTIONS] ?? 0
 
 /*
 emoji_names := ['true', 'false',
@@ -29,22 +34,27 @@ emoji_names := ['true', 'false',
                 'wholesome', 'disgusting']
 */
 
+function get_reaction(index)
+  return reactions & (1 << index)
+
+function toggle_reaction(index)
+  reactions ^= (1 << index)
+  target := new Object()
+  target[canonized_url] = [reactions, tab.title.slice(0, 60), new Date().toISOString()]
+  chrome.storage.local.set(target).then(() => chrome.storage.local.get(canonized_url).then((result) => console.log(result)));
 
 function react(evt, index)
-  reactions[index] = !reactions[index]
+  toggle_reaction(index)
   element := evt.currentTarget
   count := element.getElementsByClassName('reaction-count')[0]
-  element.className = if reactions[index] then 'reacted' else ''
+  element.className = if get_reaction(index) then 'reacted' else ''
   element.getElementsByClassName('reaction-count')[0].innerText =
-    formatter.format count.value + (if reactions[index] then 1 else 0)
-
-console.log(tab.title)
-console.log(canonized_url)
+    formatter.format count.value + (if get_reaction(index) then 1 else 0)
 
 for element, index of document.getElementById('reactions').children
   count := element.getElementsByClassName('reaction-count')[0]
   count.value = 0  // TODO
-  element.className = 'reacted' if reactions[index]
+  element.className = if get_reaction(index) then 'reacted' else ''
   element.addEventListener('click', (evt) => react(evt, index))
   element.getElementsByClassName('reaction-count')[0].innerText =
-    formatter.format count.value + (if reactions[index] then 1 else 0)
+    formatter.format count.value + (if get_reaction(index) then 1 else 0)
