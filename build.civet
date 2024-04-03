@@ -1,12 +1,25 @@
 #!/usr/bin/env civet
+"civet autoLet coffee-comment"
+# vim: set syntax=ls:
 
 fs := require 'fs'
 pug := require 'pug'
 stylus := require 'stylus'
 civet := require '@danielx/civet'
 
-fs.writeFileSync 'popup.html', pug.renderFile 'popup.pug', cache: true, pretty: true
-stylus.render fs.readFileSync('popup.styl', encoding: 'utf8', flag: 'r'), filename: 'popup.css', (err, css) =>
-  fs.writeFileSync('popup.css', css)
-  if (err) throw err
-fs.writeFileSync 'popup.js', civet.compile fs.readFileSync('popup.civet', encoding: 'utf8', flag: 'r'), js: true
+throw_err = (err) => if (err) throw err
+
+fs.writeFile
+  'popup.html'
+  pug.renderFile 'popup.pug', cache: true, pretty: true
+  throw_err
+
+fs.readFile 'popup.styl', encoding: 'utf8', flag: 'r', (err, data) =>
+  throw_err err
+  stylus.render data, filename: 'popup.css', (err, css) =>
+    throw_err err
+    fs.writeFile 'popup.css', css, throw_err
+
+fs.readFile 'popup.civet', encoding: 'utf8', flag: 'r', (err, data) =>
+  throw_err err
+  fs.writeFile 'popup.js', civet.compile(data, js: true), throw_err

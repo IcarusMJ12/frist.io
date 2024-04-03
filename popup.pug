@@ -1,3 +1,15 @@
+-
+  var emojis = [
+                 '😂', '🥱',
+                 '😊', '😢',
+                 '🤔', '🤨',
+                 '😏', '😲',
+                 '🤗', '🤮',
+                 '💎', '💩',
+                 '🔥', '❄️',
+                 '💯', '❌',
+                ];
+
 doctype html
 html(lang='en')
   head
@@ -6,9 +18,10 @@ html(lang='en')
     link(rel='stylesheet' href='./popup.css')
   body
     ul#reactions
-      each emoji in ['💯', '❌', '🔥', '❄️', '😊', '😢', '💎', '💩', '🤔', '🤨', '🤣', '🥱', '😏', '😲', '🤗', '🤮']
+      each emoji in emojis
         li
           .reaction= emoji
           .reaction-count(value=0) 0
+    // TODO: #settings(title='Settings') 🔧
     
     script(src='./popup.js' type='module')
