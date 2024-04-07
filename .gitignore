@@ -1,5 +1,6 @@
 node_modules/
 package-lock.json
-popup.css
-popup.html
-popup.js
+*.css
+*.html
+*.js
+*.tsx

@@ -1,5 +1,4 @@
-"civet autoLet coffee-comment"
-# vim: set syntax=ls:
+"civet autoLet"
 
 formatter := new Intl.NumberFormat 'en', notation: 'compact'
 get_parameters :=
@@ -21,12 +20,13 @@ function canonize_url(url_)
       continue
     params.append(key, p)
   param_string := params.toString()
-  if param_string.length then [prefix, param_string].join('?') else prefix
+  if param_string.# then [prefix, param_string].join('?') else prefix
 
 stored := await chrome.storage.local.get canonized_url
 reactions = stored?[canonized_url]?[REACTIONS] ?? 0
 
-# https://home.unicode.org/emoji/emoji-frequency/
+
+// https://home.unicode.org/emoji/emoji-frequency/
 /*
 emoji_names := [
   'funny', 'boring',
@@ -61,7 +61,7 @@ function react(evt, index)
 
 for element, index of document.getElementById('reactions').children
   count := element.getElementsByClassName('reaction-count')[0]
-  count.value = 0  # TODO
+  count.value = 0  // TODO
   element.className = if get_reaction index then 'reacted' else ''
   element.addEventListener('click', (evt) => react evt, index)
   element.getElementsByClassName('reaction-count')[0].innerText =

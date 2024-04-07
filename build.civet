@@ -1,6 +1,5 @@
 #!/usr/bin/env civet
-"civet autoLet coffee-comment"
-# vim: set syntax=ls:
+"civet autoLet"
 
 fs := require 'fs'
 pug := require 'pug'
