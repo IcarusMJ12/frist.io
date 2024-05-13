@@ -1,14 +1,4 @@
--
-  var emojis = [
-                 '😂', '🥱',
-                 '😊', '😢',
-                 '🤔', '🤨',
-                 '😏', '😲',
-                 '🤗', '🤮',
-                 '💎', '💩',
-                 '🔥', '❄️',
-                 '💯', '❌',
-                ];
+include emojis.pug
 
 doctype html
 html(lang='en')
@@ -22,6 +12,7 @@ html(lang='en')
         li
           .reaction= emoji
           .reaction-count(value=0) 0
-    // TODO: #settings(title='Settings') 🔧
+
+    #options ⚙️
     
     script(src='./popup.js' type='module')

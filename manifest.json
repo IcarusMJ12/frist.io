@@ -2,9 +2,8 @@
   "manifest_version": 3,
   "name": "frist.io",
   "description": "React to any page on the internet.",
-   "action": {
-      "default_popup": "popup.html"
-   },
+  "action": { "default_popup": "popup.html" },
+  "options_page": "options.html",
   "permissions": ["activeTab", "storage"],
   "version": "0.1.0",
   "icons": {

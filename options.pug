@@ -1,0 +1,23 @@
+include emojis.pug
+
+doctype html
+html.dark(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    link(href='DataTables/datatables.min.css' rel='stylesheet')
+    link(rel='stylesheet' href='./options.css')
+  body
+    #main
+      table.compact.stripe#reactions-table
+        thead
+          tr
+            th URL
+            th Title
+            th Date
+            each emoji in emojis
+              th= emoji
+        tbody#reactions-table-body
+
+    script(src='DataTables/datatables.min.js')
+    script(src='./options.js' type='module')

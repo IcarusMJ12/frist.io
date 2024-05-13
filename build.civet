@@ -1,6 +1,8 @@
 #!/usr/bin/env civet
 "civet autoLet"
 
+{ globSync } := require 'glob'
+path := require 'path'
 fs := require 'fs'
 pug := require 'pug'
 stylus := require 'stylus'
@@ -8,17 +10,24 @@ civet := require '@danielx/civet'
 
 throw_err = (err) => if (err) throw err
 
-fs.writeFile
-  'popup.html'
-  pug.renderFile 'popup.pug', cache: true, pretty: true
-  throw_err
 
-fs.readFile 'popup.styl', encoding: 'utf8', flag: 'r', (err, data) =>
-  throw_err err
-  stylus.render data, filename: 'popup.css', (err, css) =>
+for fn of globSync('./*.pug')
+  base = path.parse(fn).name
+  fs.writeFile
+    base + '.html'
+    pug.renderFile base + '.pug', cache: true, pretty: true
+    throw_err
+
+for fn of globSync('./*.styl')
+  base = path.parse(fn).name
+  fs.readFile base + '.styl', encoding: 'utf8', flag: 'r', (err, data) =>
     throw_err err
-    fs.writeFile 'popup.css', css, throw_err
+    stylus.render data, filename: base + '.css', (err, css) =>
+      throw_err err
+      fs.writeFile base + '.css', css, throw_err
 
-fs.readFile 'popup.civet', encoding: 'utf8', flag: 'r', (err, data) =>
-  throw_err err
-  fs.writeFile 'popup.js', civet.compile(data, js: true), throw_err
+for fn of globSync('./*.civet')
+  base = path.parse(fn).name
+  fs.readFile base + '.civet', encoding: 'utf8', flag: 'r', (err, data) =>
+    throw_err err
+    fs.writeFile base + '.js', civet.compile(data, js: true), throw_err

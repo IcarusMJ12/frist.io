@@ -66,3 +66,9 @@ for element, index of document.getElementById('reactions').children
   element.addEventListener('click', (evt) => react evt, index)
   element.getElementsByClassName('reaction-count')[0].innerText =
     formatter.format count.value + if get_reaction index then 1 else 0
+
+document.getElementById('options').addEventListener 'click', =>
+  if chrome.runtime.openOptionsPage
+    chrome.runtime.openOptionsPage()
+  else
+    window.open chrome.runtime.getURL 'options.html'
