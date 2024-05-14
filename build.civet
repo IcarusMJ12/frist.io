@@ -11,23 +11,23 @@ civet := require '@danielx/civet'
 throw_err = (err) => if (err) throw err
 
 
-for fn of globSync('./*.pug')
+for fn of globSync('src/*.pug')
   base = path.parse(fn).name
   fs.writeFile
     base + '.html'
-    pug.renderFile base + '.pug', cache: true, pretty: true
+    pug.renderFile fn, cache: true, pretty: true
     throw_err
 
-for fn of globSync('./*.styl')
+for fn of globSync('src/*.styl')
   base = path.parse(fn).name
-  fs.readFile base + '.styl', encoding: 'utf8', flag: 'r', (err, data) =>
+  fs.readFile fn, encoding: 'utf8', flag: 'r', (err, data) =>
     throw_err err
     stylus.render data, filename: base + '.css', (err, css) =>
       throw_err err
       fs.writeFile base + '.css', css, throw_err
 
-for fn of globSync('./*.civet')
+for fn of globSync('src/*.civet')
   base = path.parse(fn).name
-  fs.readFile base + '.civet', encoding: 'utf8', flag: 'r', (err, data) =>
+  fs.readFile fn, encoding: 'utf8', flag: 'r', (err, data) =>
     throw_err err
     fs.writeFile base + '.js', civet.compile(data, js: true), throw_err

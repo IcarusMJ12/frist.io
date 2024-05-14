@@ -1,0 +1,30 @@
+"civet autoLet"
+
+data := await chrome.storage.local.get()
+
+emoji := []
+headers := $('#reactions-table > thead > tr > th')
+for header of headers
+  emoji.push header.innerHTML
+body := $('#reactions-table-body').first()
+
+rows := []
+for [ url, values ] of Object.entries data
+  [ date, title, reactions ] := values
+  row := [ url, title, date ]
+  for i = 0; i < 16; i++
+    row.push if reactions & (1 << i) then emoji[i + 3] else ''
+  rows.push row
+
+emoji_indices := []
+for i = 0; i < 16; i++
+  emoji_indices.push i + 3
+table := new DataTable '#reactions-table',
+  columnDefs: [ orderable: false, targets: emoji_indices
+    className: 'clickable', targets: [ 0 ]]
+  data: rows
+  layout: topStart: pageLength: menu: [ 50, 100, 200, 400 ]
+  pageLength: 100
+
+$('#reactions-table').on 'click', 'tbody tr', (evt) =>
+  window.open table.row(evt.target).data()[0], '_blank'
