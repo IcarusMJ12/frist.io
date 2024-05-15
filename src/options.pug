@@ -16,7 +16,7 @@ html.dark(lang='en')
             th Title
             th Date
             each emoji in emojis
-              th= emoji
+              th: div= emoji
         tbody#reactions-table-body
 
     script(src='jquery-3.7.1.slim.min.js')
