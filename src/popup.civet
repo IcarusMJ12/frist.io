@@ -14,13 +14,14 @@ function canonize_url(url_)
   prefix := url_.split('?')[0]
   params := new URLSearchParams()
   u := new URL url_
-  for key of get_parameters[u.host + u.pathname] ?? []
+  implicit := if prefix.startsWith('http') then u.host + u.pathname else prefix
+  for key of get_parameters[implicit] ?? []
     p := u.searchParams.get(key)
     if p === undefined
       continue
     params.append(key, p)
   param_string := params.toString()
-  if param_string.# then [prefix, param_string].join('?') else prefix
+  if param_string.# then [implicit, param_string].join('?') else implicit
 
 stored := await chrome.storage.local.get canonized_url
 reactions = stored?[canonized_url]?[REACTIONS] ?? 0

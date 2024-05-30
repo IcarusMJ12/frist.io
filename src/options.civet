@@ -10,9 +10,9 @@ for header of $ '#reactions-table > thead > tr > th > div'
 body := $('#reactions-table-body').first()
 
 rows := []
-for [ url, values ] of Object.entries data
+for [ url_, values ] of Object.entries data
   [ date, title, reactions ] := values
-  row := [ url, title, date ]
+  row := [ url_, title, date ]
   for i = 0; i < 16; i++
     row.push if reactions & (1 << i) then col_names[i] else ''
   rows.push row
@@ -56,4 +56,5 @@ $('#reactions-table > thead > tr > th').on 'click', (evt) =>
   table.draw()
 
 $('#reactions-table').on 'click', 'tbody tr', (evt) =>
-  window.open table.row(evt.target).data()[0], '_blank'
+  url_ := table.row(evt.target).data()[0]
+  window.open url_.includes('://') ? url_ : 'https://' + url_, '_blank'
