@@ -2,7 +2,6 @@
   "name": "frist.io",
   "version": "0.1.0",
   "description": "React to any page on the internet.",
-  "main": "build.civet",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

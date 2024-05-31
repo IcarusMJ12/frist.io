@@ -9,6 +9,7 @@ view your reaction history.
 You will need Node.js v21 or later.
 
 ```
+sudo npm install -g @danielx/civet
 npm install
-node .
+./build.civet
 ```
