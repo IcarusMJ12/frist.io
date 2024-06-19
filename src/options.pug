@@ -8,16 +8,27 @@ html.dark(lang='en')
     link(href='datatables.min.css' rel='stylesheet')
     link(rel='stylesheet' href='./options.css')
   body
+    #tabs
+      button#settings.tablink.active ⚙️
+      button#table.tablink 📑
+      button#about.tablink ❔
     #main
-      table.compact.stripe#reactions-table
-        thead
-          tr
-            th URL
-            th Title
-            th Date
-            each emoji in emojis
-              th: div= emoji
-        tbody#reactions-table-body
+      #settings-tab.tabcontent(style='display: block;')
+        h1 TBD
+      #table-tab.tabcontent
+        table.compact.stripe#reactions-table
+          thead
+            tr
+              th URL
+              th Title
+              th Date
+              each emoji in emojis
+                th: div= emoji
+          tbody#reactions-table-body
+        #loader
+      #about-tab.tabcontent
+        h1 React to any website with a set of emoji
+        p View your reaction history in the table 📑 with sortable or filtereable columns.
 
     script(src='jquery-3.7.1.slim.min.js')
     script(src='datatables.min.js')

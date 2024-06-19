@@ -1,27 +1,20 @@
 "civet autoLet"
 
 EMOJI_OFFSET := 3
-
-data := await chrome.storage.local.get()
-
-col_names := []
-for header of $ '#reactions-table > thead > tr > th > div'
-  col_names.push header.innerHTML
-body := $('#reactions-table-body').first()
-
 rows := []
-for [ url_, values ] of Object.entries data
-  [ date, title, reactions ] := values
-  row := [ url_, title, date ]
-  for i = 0; i < 16; i++
-    row.push if reactions & (1 << i) then col_names[i] else ''
-  rows.push row
-
 filters := [] // 0 -> all, 1 -> present, -1 -> absent
-emoji_indices := []
-for i = 0; i < 16; i++
-  filters.push 0
-  emoji_indices.push i + EMOJI_OFFSET
+is_table_initialized = false
+
+open_tab = (evt) =>
+  for tab of $ '.tabcontent'
+    tab.style.display = 'none'
+  for button of $ '.tablink'
+    button.className = button.className.replace(' active', '')
+  $('#' + evt.currentTarget.id + '-tab')[0].style.display = 'block'
+  evt.currentTarget.className += ' active'
+  if evt.currentTarget.id == 'table' and not is_table_initialized
+    populate_reactions_table()
+    is_table_initialized = true
 
 filter_rows = =>
   filtered = rows
@@ -32,29 +25,53 @@ filter_rows = =>
       filtered = filtered.filter((row) => row[index + EMOJI_OFFSET] == '')
   return filtered
 
-table := new DataTable '#reactions-table',
-  columnDefs: [ orderable: false, targets: emoji_indices
-    className: 'clickable', targets: [ 0 ]]
-  data: rows
-  layout: topStart: pageLength: menu: [ 50, 100, 200, 400 ]
-  pageLength: 100
+$('.tablink').on 'click', open_tab
 
-$('#reactions-table > thead > tr > th').on 'click', (evt) =>
-  index := evt.currentTarget.cellIndex - EMOJI_OFFSET
-  switch filters[index]
-    when 0
-      filters[index] = 1
-      evt.target.className = 'selected'
-    when 1
-      filters[index] = -1
-      evt.target.className = 'deselected'
-    else
-      filters[index] = 0
-      evt.target.className = ''
-  table.clear()
-  table.rows.add filter_rows()
-  table.draw()
+populate_reactions_table = =>
+  loader := $('#loader')[0]
+  data := await chrome.storage.local.get()
 
-$('#reactions-table').on 'click', 'tbody tr', (evt) =>
-  url_ := table.row(evt.target).data()[0]
-  window.open url_.includes('://') ? url_ : 'https://' + url_, '_blank'
+  col_names := []
+  for header of $ '#reactions-table > thead > tr > th > div'
+    col_names.push header.innerHTML
+  body := $('#reactions-table-body').first()
+
+  for [ url_, values ] of Object.entries data
+    [ date, title, reactions ] := values
+    row := [ url_, title, date ]
+    for i = 0; i < 16; i++
+      row.push if reactions & (1 << i) then col_names[i] else ''
+    rows.push row
+
+  emoji_indices := []
+  for i = 0; i < 16; i++
+    filters.push 0
+    emoji_indices.push i + EMOJI_OFFSET
+
+  loader.style.display = 'none'
+  table := new DataTable '#reactions-table',
+    columnDefs: [ orderable: false, targets: emoji_indices
+      className: 'clickable', targets: [ 0 ]]
+    data: rows
+    layout: topStart: pageLength: menu: [ 50, 100, 200, 400 ]
+    pageLength: 100
+
+  $('#reactions-table > thead > tr > th').on 'click', (evt) =>
+    index := evt.currentTarget.cellIndex - EMOJI_OFFSET
+    switch filters[index]
+      when 0
+        filters[index] = 1
+        evt.target.className = 'selected'
+      when 1
+        filters[index] = -1
+        evt.target.className = 'deselected'
+      else
+        filters[index] = 0
+        evt.target.className = ''
+    table.clear()
+    table.rows.add filter_rows()
+    table.draw()
+
+  $('#reactions-table').on 'click', 'tbody tr', (evt) =>
+    url_ := table.row(evt.target).data()[0]
+    window.open url_.includes('://') ? url_ : 'https://' + url_, '_blank'
