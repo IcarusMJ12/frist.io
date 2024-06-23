@@ -3,7 +3,7 @@
 EMOJI_OFFSET = 3
 rows = []
 filters = [] // 0 -> all, 1 -> present, -1 -> absent
-let is_table_initialized = false
+is_table_initialized .= false
 
 open_tab = (evt) =>
   for tab of $ '.tabcontent'
@@ -17,7 +17,7 @@ open_tab = (evt) =>
     is_table_initialized = true
 
 filter_rows = =>
-  let filtered = rows
+  filtered .= rows
   for filter, index of filters
     if filter == 1
       filtered = filtered.filter((row) => row[index + EMOJI_OFFSET] != '')

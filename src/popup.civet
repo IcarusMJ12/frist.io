@@ -24,7 +24,7 @@ canonize_url = (url_) =>
   if param_string.# then [implicit, param_string].join('?') else implicit
 
 stored = await chrome.storage.local.get canonized_url
-let reactions = stored?[canonized_url]?[REACTIONS] ?? 0
+reactions .= stored?[canonized_url]?[REACTIONS] ?? 0
 
 
 // https://home.unicode.org/emoji/emoji-frequency/
