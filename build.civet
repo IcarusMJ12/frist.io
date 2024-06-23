@@ -1,12 +1,12 @@
 #!/usr/bin/env civet
-"civet autoLet"
+"civet autoConst"
 
-{ globSync } := require 'glob'
-path := require 'path'
-fs := require 'fs'
-pug := require 'pug'
-stylus := require 'stylus'
-civet := require '@danielx/civet'
+{ globSync } = require 'glob'
+path = require 'path'
+fs = require 'fs'
+pug = require 'pug'
+stylus = require 'stylus'
+civet = require '@danielx/civet'
 
 throw_err = (err) => if (err) throw err
 
@@ -20,12 +20,12 @@ log_if_unchanged = (src, dst) =>
 
 log_write = (src, dst) => console.log src + ' -> ' + dst
 
-ext_map :=
+ext_map =
   civet: 'js'
   pug: 'html'
   styl: 'css'
 
-transpilers :=
+transpilers =
   civet: (fn, base, target) =>
     fs.readFile fn, encoding: 'utf8', flag: 'r', (err, data) =>
       throw_err err

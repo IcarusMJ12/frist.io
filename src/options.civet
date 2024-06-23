@@ -1,9 +1,9 @@
-"civet autoLet"
+"civet autoConst"
 
-EMOJI_OFFSET := 3
-rows := []
-filters := [] // 0 -> all, 1 -> present, -1 -> absent
-is_table_initialized = false
+EMOJI_OFFSET = 3
+rows = []
+filters = [] // 0 -> all, 1 -> present, -1 -> absent
+let is_table_initialized = false
 
 open_tab = (evt) =>
   for tab of $ '.tabcontent'
@@ -17,7 +17,7 @@ open_tab = (evt) =>
     is_table_initialized = true
 
 filter_rows = =>
-  filtered = rows
+  let filtered = rows
   for filter, index of filters
     if filter == 1
       filtered = filtered.filter((row) => row[index + EMOJI_OFFSET] != '')
@@ -28,28 +28,28 @@ filter_rows = =>
 $('.tablink').on 'click', open_tab
 
 populate_reactions_table = =>
-  loader := $('#loader')[0]
-  data := await chrome.storage.local.get()
+  loader = $('#loader')[0]
+  data = await chrome.storage.local.get()
 
-  col_names := []
+  col_names = []
   for header of $ '#reactions-table > thead > tr > th > div'
     col_names.push header.innerHTML
-  body := $('#reactions-table-body').first()
+  body = $('#reactions-table-body').first()
 
   for [ url_, values ] of Object.entries data
     [ date, title, reactions ] := values
-    row := [ url_, title, date ]
+    row = [ url_, title, date ]
     for i = 0; i < 16; i++
       row.push if reactions & (1 << i) then col_names[i] else ''
     rows.push row
 
-  emoji_indices := []
+  emoji_indices = []
   for i = 0; i < 16; i++
     filters.push 0
     emoji_indices.push i + EMOJI_OFFSET
 
   loader.style.display = 'none'
-  table := new DataTable '#reactions-table',
+  table = new DataTable '#reactions-table',
     columnDefs: [ orderable: false, targets: emoji_indices
       className: 'clickable', targets: [ 0 ]]
     data: rows
@@ -57,7 +57,7 @@ populate_reactions_table = =>
     pageLength: 100
 
   $('#reactions-table > thead > tr > th').on 'click', (evt) =>
-    index := evt.currentTarget.cellIndex - EMOJI_OFFSET
+    index = evt.currentTarget.cellIndex - EMOJI_OFFSET
     switch filters[index]
       when 0
         filters[index] = 1
@@ -73,5 +73,5 @@ populate_reactions_table = =>
     table.draw()
 
   $('#reactions-table').on 'click', 'tbody tr', (evt) =>
-    url_ := table.row(evt.target).data()[0]
+    url_ = table.row(evt.target).data()[0]
     window.open url_.includes('://') ? url_ : 'https://' + url_, '_blank'

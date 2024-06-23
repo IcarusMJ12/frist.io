@@ -1,35 +1,35 @@
-"civet autoLet"
+"civet autoConst"
 
-formatter := new Intl.NumberFormat 'en', notation: 'compact'
-get_parameters :=
+formatter = new Intl.NumberFormat 'en', notation: 'compact'
+get_parameters =
   'www.youtube.com/watch': ['v']
-tab := (await chrome.tabs.query active: true, lastFocusedWindow: true)[0]
-canonized_url := canonize_url tab.url
+tab = (await chrome.tabs.query active: true, lastFocusedWindow: true)[0]
+canonized_url = canonize_url tab.url
 
-DATE := 0
-TITLE := 1
-REACTIONS := 2
+DATE = 0
+TITLE = 1
+REACTIONS = 2
 
-function canonize_url(url_)
-  prefix := url_.split('?')[0]
-  params := new URLSearchParams()
-  u := new URL url_
-  implicit := if prefix.startsWith('http') then u.host + u.pathname else prefix
+canonize_url = (url_) =>
+  prefix = url_.split('?')[0]
+  params = new URLSearchParams()
+  u = new URL url_
+  implicit = if prefix.startsWith('http') then u.host + u.pathname else prefix
   for key of get_parameters[implicit] ?? []
-    p := u.searchParams.get(key)
+    p = u.searchParams.get(key)
     if p === undefined
       continue
     params.append(key, p)
-  param_string := params.toString()
+  param_string = params.toString()
   if param_string.# then [implicit, param_string].join('?') else implicit
 
-stored := await chrome.storage.local.get canonized_url
-reactions = stored?[canonized_url]?[REACTIONS] ?? 0
+stored = await chrome.storage.local.get canonized_url
+let reactions = stored?[canonized_url]?[REACTIONS] ?? 0
 
 
 // https://home.unicode.org/emoji/emoji-frequency/
 /*
-emoji_names := [
+emoji_names = [
   'funny', 'boring',
   'happy', 'sad',
   'informative', 'confusing',
@@ -41,27 +41,27 @@ emoji_names := [
 ]
 */
 
-function get_reaction(index)
+get_reaction = (index) =>
   reactions & (1 << index)
 
-function toggle_reaction(index)
+toggle_reaction = (index) =>
   reactions ^= (1 << index)
-  target := new Object()
+  target = new Object()
   target[canonized_url] = [new Date().toISOString(), tab.title.slice(0, 60),
                            reactions]
   chrome.storage.local.set(target).then =>
       console.log(target)
 
-function react(evt, index)
+react = (evt, index) =>
   toggle_reaction index
-  element := evt.currentTarget
-  count := element.getElementsByClassName('reaction-count')[0]
+  element = evt.currentTarget
+  count = element.getElementsByClassName('reaction-count')[0]
   element.className = if get_reaction index then 'reacted' else ''
   element.getElementsByClassName('reaction-count')[0].innerText =
     formatter.format count.value + if get_reaction index then 1 else 0
 
 for element, index of document.getElementById('reactions').children
-  count := element.getElementsByClassName('reaction-count')[0]
+  count = element.getElementsByClassName('reaction-count')[0]
   count.value = 0  // TODO
   element.className = if get_reaction index then 'reacted' else ''
   element.addEventListener('click', (evt) => react evt, index)
