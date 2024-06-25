@@ -1,0 +1,13 @@
+import chrome from 'sinon-chrome'
+
+chrome.tabs.query.resolves [url: 'https://localhost/wat', title: 'wat']
+storage := new Object()
+storage['localhost/wat'] = [ 0, 0, 5 ]
+chrome.storage.local.get.resolves storage
+
+global.chrome = chrome
+global.document =
+  getElementById: (id_) =>
+    switch id_
+      when 'reactions' then children: []
+      when 'options' then addEventListener: =>

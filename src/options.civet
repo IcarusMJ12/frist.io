@@ -25,8 +25,6 @@ filter_rows = =>
       filtered = filtered.filter((row) => row[index + EMOJI_OFFSET] == '')
   return filtered
 
-$('.tablink').on 'click', open_tab
-
 populate_reactions_table = =>
   loader = $('#loader')[0]
   data = await chrome.storage.local.get()
@@ -75,3 +73,5 @@ populate_reactions_table = =>
   $('#reactions-table').on 'click', 'tbody tr', (evt) =>
     url_ = table.row(evt.target).data()[0]
     window.open url_.includes('://') ? url_ : 'https://' + url_, '_blank'
+
+$('.tablink').on 'click', open_tab
