@@ -56,7 +56,7 @@
     "reporter": "dot",
     "recursive": true,
     "spec": [
-      "test"
+      "tests"
     ]
   }
 }

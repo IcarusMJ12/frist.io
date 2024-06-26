@@ -2,8 +2,9 @@ import chrome from 'sinon-chrome'
 
 chrome.tabs.query.resolves [url: 'https://localhost/wat', title: 'wat']
 storage := new Object()
-storage['localhost/wat'] = [ 0, 0, 5 ]
+storage['localhost/wat'] = [0, 0, 5]
 chrome.storage.local.get.resolves storage
+chrome.storage.local.set.returns(then: =>)
 
 global.chrome = chrome
 global.document =

@@ -59,7 +59,7 @@ react = (evt, index) =>
   element = evt.currentTarget
   count = element.getElementsByClassName('reaction-count')[0]
   element.className = if get_reaction index then 'reacted' else ''
-  element.getElementsByClassName('reaction-count')[0].innerText =
+  count.innerText =
     formatter.format count.value + if get_reaction index then 1 else 0
 
 for element, index of document.getElementById('reactions').children

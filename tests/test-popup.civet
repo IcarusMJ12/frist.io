@@ -1,0 +1,62 @@
+"civet autoConst"
+
+import * as chai from 'chai'
+
+// in a brillant stroke of geinus js hoists all imports so initialization has
+// to happen here
+import 'popup-before.civet'
+import { formatter, canonize_url, get_reaction, toggle_reaction, react
+       } from '../src/popup.civet'
+
+assert = chai.assert
+should = chai.should()
+
+describe 'formatter', =>
+  for [value, expected] of [
+    [1202, '1.2K'], [1289, '1.3K'], [12450, '12K'], [1180000, '1.2M']]
+    it value.toString(), =>
+      formatter.format(value).should.equal expected
+
+describe 'canonize_url', =>
+  for [value, expected] of [
+    ['https://www.youtube.com/watch?v=abc&t=203',
+     'www.youtube.com/watch?v=abc'],
+    ['https://www.youtube.com/watch',
+     'www.youtube.com/watch'],
+    ['https://x.com/LWCnewswire/status/1802676027627286975',
+     'x.com/LWCnewswire/status/1802676027627286975'],
+    ['https://www.amazon.com/sonichu/s?k=sonichu',
+     'www.amazon.com/sonichu/s']]
+    it value, =>
+      canonize_url(value).should.equal expected
+
+describe 'get_reaction', =>
+  for [value, expected] of [[0, 1], [1, 0], [2, 1], [3, 0]]
+    it value.toString(), =>
+      get_reaction(value).should.equal expected << value
+
+describe 'toggle_reaction', =>
+  it 'unsets reaction 3', =>
+    toggle_reaction 2
+    get_reaction(2).should.equal 0
+    obj = global.chrome.storage.local.set.getCall(0).args[0]['localhost/wat']
+    obj[1].should.equal 'wat'
+    obj[2].should.equal 1
+    toggle_reaction 2 // reset
+
+describe 'react', =>
+  count .= [innerText: '0', value: 0]
+  evt .= currentTarget:
+    className: ''
+    getElementsByClassName: => count
+
+  it 'toggles reaction 4', =>
+    react evt, 3
+    assert.equal evt.currentTarget.className, 'reacted'
+    assert.equal count[0].innerText, '1'
+    assert.equal count[0].value, 0
+  it 'toggles reaction 3', =>
+    react evt, 2
+    assert.equal evt.currentTarget.className, ''
+    assert.equal count[0].innerText, '0'
+    assert.equal count[0].value, 0

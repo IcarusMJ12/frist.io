@@ -34,9 +34,9 @@ populate_reactions_table = =>
     col_names.push header.innerHTML
   body = $('#reactions-table-body').first()
 
-  for [ url_, values ] of Object.entries data
-    [ date, title, reactions ] := values
-    row = [ url_, title, date ]
+  for [url_, values] of Object.entries data
+    [date, title, reactions] := values
+    row = [url_, title, date]
     for i = 0; i < 16; i++
       row.push if reactions & (1 << i) then col_names[i] else ''
     rows.push row
@@ -48,10 +48,10 @@ populate_reactions_table = =>
 
   loader.style.display = 'none'
   table = new DataTable '#reactions-table',
-    columnDefs: [ orderable: false, targets: emoji_indices
-      className: 'clickable', targets: [ 0 ]]
+    columnDefs: [orderable: false, targets: emoji_indices
+      className: 'clickable', targets: [0]]
     data: rows
-    layout: topStart: pageLength: menu: [ 50, 100, 200, 400 ]
+    layout: topStart: pageLength: menu: [50, 100, 200, 400]
     pageLength: 100
 
   $('#reactions-table > thead > tr > th').on 'click', (evt) =>
