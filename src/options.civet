@@ -1,5 +1,7 @@
 "civet autoConst"
 
+export { open_tab, filter_rows, populate_reactions_table, toggle_filters }
+
 EMOJI_OFFSET = 3
 rows = []
 filters = [] // 0 -> all, 1 -> present, -1 -> absent
@@ -24,6 +26,19 @@ filter_rows = =>
     else if filter == -1
       filtered = filtered.filter((row) => row[index + EMOJI_OFFSET] == '')
   return filtered
+
+toggle_filters = (evt) =>
+  index = evt.currentTarget.cellIndex - EMOJI_OFFSET
+  switch filters[index]
+    when 0
+      filters[index] = 1
+      evt.target.className = 'selected'
+    when 1
+      filters[index] = -1
+      evt.target.className = 'deselected'
+    else
+      filters[index] = 0
+      evt.target.className = ''
 
 populate_reactions_table = =>
   loader = $('#loader')[0]
@@ -55,17 +70,7 @@ populate_reactions_table = =>
     pageLength: 100
 
   $('#reactions-table > thead > tr > th').on 'click', (evt) =>
-    index = evt.currentTarget.cellIndex - EMOJI_OFFSET
-    switch filters[index]
-      when 0
-        filters[index] = 1
-        evt.target.className = 'selected'
-      when 1
-        filters[index] = -1
-        evt.target.className = 'deselected'
-      else
-        filters[index] = 0
-        evt.target.className = ''
+    toggle_filters evt
     table.clear()
     table.rows.add filter_rows()
     table.draw()

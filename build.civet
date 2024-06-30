@@ -46,7 +46,7 @@ transpilers =
         fs.writeFile target, css, throw_err
 
 
-for fn of globSync('src/*')
+for fn of globSync('src/*.*')
   file_ = path.parse(fn)
   base = file_.name
   ext = file_.ext.split('.')[1]

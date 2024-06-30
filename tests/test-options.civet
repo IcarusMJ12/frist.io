@@ -1,0 +1,41 @@
+"civet autoConst"
+
+import * as chai from 'chai'
+
+import 'options-before.civet'
+import { open_tab, filter_rows, populate_reactions_table, toggle_filters
+       } from '../src/options.civet'
+
+assert = chai.assert
+should = chai.should()
+
+describe 'open_tab', =>
+  it 'initializes the table', =>
+    evt = currentTarget: id: 'table', className: ''
+    open_tab(evt).should.equal true
+    assert.equal evt.currentTarget.className, ' active'
+
+describe 'toggle_filters', =>
+  evt .=
+    currentTarget: cellIndex: 8
+    target: className: ''
+  it '0', =>
+    toggle_filters evt
+    assert.equal evt.target.className, 'selected'
+  it '1', =>
+    toggle_filters evt
+    assert.equal evt.target.className, 'deselected'
+  it '-1', =>
+    toggle_filters evt
+    assert.equal evt.target.className, ''
+
+describe 'filter_rows', =>
+  it 'filters rows', =>
+    evt .=
+      currentTarget: cellIndex: 8
+      target: className: ''
+    toggle_filters evt
+    evt.currentTarget.cellIndex = 9
+    toggle_filters evt
+    toggle_filters evt
+    filter_rows().should.be.empty

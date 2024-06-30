@@ -1,0 +1,20 @@
+"civet autoConst"
+
+import chrome from 'sinon-chrome'
+import fs from 'fs'
+import pug from 'pug'
+import { JSDOM } from 'jsdom'
+import jquery from 'jquery'
+
+fs.readFile 'src/options.pug', encoding: 'utf8', flag: 'r', (err, data) =>
+  if (err) throw err
+  dom = pug.render
+    data.split('// tests-split')[0].trim()
+    filename: 'src/options.pug'
+  { window } = new JSDOM dom
+  global.window = window
+  global.document = window.document
+  global.$ = jquery global.window
+
+chrome.storage.local.get.resolves new Object()
+global.chrome = chrome
